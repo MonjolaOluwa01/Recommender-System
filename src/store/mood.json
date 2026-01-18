@@ -1,0 +1,12 @@
+{
+  "Fantasy": ["Enchanted", "Whimsical", "Epic", "Escapist", "Heroic", "Mythical", "Wondrous"],
+  "Science Fiction": ["Curious", "Analytical", "Futuristic", "Existential", "Technological", "Speculative", "Awe-struck"],
+  "Mystery": ["Suspenseful", "Puzzled", "Skeptical", "Intrigued", "Cerebral", "Tense", "Grim"],
+  "Romance": ["Sentimental", "Passionate", "Hopeful", "Tender", "Yearning", "Intimate", "Bittersweet"],
+  "Horror": ["Dreadful", "Unsettled", "Terrified", "Claustrophobic", "Macabre", "Shocked", "Morbid"],
+  "Thriller": ["Anxious", "Adrenaline-fueled", "Urgent", "Paranoid", "Edge-of-the-seat", "Relentless"],
+  "Historical Fiction": ["Nostalgic", "Reflective", "Immersive", "Atmospheric", "Authentic", "Somber", "Grand"],
+  "Biography": ["Inspired", "Respectful", "Empathetic", "Educational", "Introspective", "Objective"],
+  "Dystopian": ["Bleak", "Rebellious", "Oppressive", "Desperate", "Cynical", "Provocative", "Melancholy"],
+  "Poetry": ["Contemplative", "Lyrical", "Evocative", "Vulnerable", "Rhythmic", "Deep", "Ethereal"]
+}

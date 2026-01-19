@@ -39,16 +39,6 @@ function reducer(state, action) {
   }
 }
 
-function extractGeminiText(data) {
-  const parts = data?.candidates?.[0]?.content?.parts || [];
-  const text = parts
-    .map((p) => p?.text)
-    .filter(Boolean)
-    .join("\n")
-    .trim();
-  return text || "No text returned.";
-}
-
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { genre, mood, level, loading, error, results } = state;
@@ -84,56 +74,42 @@ export default function App() {
   const canSubmit = Boolean(genre && mood && level) && !loading;
 
   const fetchRecommendations = useCallback(async () => {
-    dispatch({ type: "CLEAR_ERROR" });
+  dispatch({ type: "CLEAR_ERROR" });
 
-    if (!genre || !mood || !level) {
-      dispatch({ type: "REQUEST_ERROR", payload: "Please select genre, mood, and level." });
-      return;
-    }
-
-    dispatch({ type: "REQUEST_START" });
-
-    try {
-  const prompt = `Recommend 6 books for a ${level} ${genre} reader feeling ${mood}. Explain why each book fits.`;
-
-  const res = await fetch("/api/recommend", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ genre, mood, level, prompt }),
-  });
-    });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data?.error || data?.message || "Request failed");
+  if (!genre || !mood || !level) {
+    dispatch({ type: "REQUEST_ERROR", payload: "Please select genre, mood, and level." });
+    return;
   }
 
-  setAiResponses((prev) => [...prev, data.text]);
-} catch (err) {
-  console.log(err);
-}
+  dispatch({ type: "REQUEST_START" });
 
-      const data = await res.json();
+  try {
+    const prompt = `Recommend 6 books for a ${level} ${genre} reader feeling ${mood}. Explain why each book fits.`;
 
-      if (!res.ok) {
-        throw new Error(data?.error?.message || "Gemini request failed.");
-      }
+    const res = await fetch("/api/recommend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ genre, mood, level, prompt }),
+    });
 
-      const text = extractGeminiText(data);
+    const data = await res.json();
 
-      dispatch({
-        type: "REQUEST_SUCCESS",
-        payload: {
-          meta: { genre, mood, level, model: MODEL, at: new Date().toISOString() },
-          text,
-          raw: data,
-        },
-      });
-    } catch (e) {
-      dispatch({ type: "REQUEST_ERROR", payload: e?.message });
+    if (!res.ok) {
+      throw new Error(data?.error || data?.message || "Request failed");
     }
-  }, [genre, mood, level]);
+    
+    dispatch({
+      type: "REQUEST_SUCCESS",
+      payload: {
+        meta: { genre, mood, level, at: new Date().toISOString() },
+        text: data.text,
+        raw: data,
+      },
+    });
+  } catch (e) {
+    dispatch({ type: "REQUEST_ERROR", payload: e?.message });
+  }
+}, [genre, mood, level]);
 
   return (
     <section className="max-w-2xl mx-auto p-4">

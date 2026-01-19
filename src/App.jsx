@@ -56,8 +56,7 @@ export default function App() {
   const availableMoodBasedOnGenre = useMemo(() => {
     return listOfMoodOption?.[genre] || [];
   }, [genre]);
-
-  // Keep mood valid when genre changes
+  
   useEffect(() => {
     if (!genre) {
       if (mood) dispatch({ type: "SET_MOOD", payload: "" });
@@ -95,17 +94,12 @@ export default function App() {
     dispatch({ type: "REQUEST_START" });
 
     try {
-      // ✅ Put your key in an env var (recommended).
-      // Vite: VITE_GEMINI_API_KEY
-      // CRA:  REACT_APP_GEMINI_API_KEY
       const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
       if (!GEMINI_API_KEY) {
         throw new Error("Missing API key. Set VITE_GEMINI_API_KEY (or REACT_APP_GEMINI_API_KEY).");
       }
-
-      // Model names change over time; pick a stable one from the models list in the docs.
-      // Example shown in Google docs includes Gemini Flash models. :contentReference[oaicite:4]{index=4}
+      
       const MODEL = "gemini-2.5-flash";
 
       const prompt = `Recommend 6 books for a ${level} ${genre} reader feeling ${mood}. Explain why each book fits.`;

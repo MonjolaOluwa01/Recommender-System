@@ -94,26 +94,24 @@ export default function App() {
     dispatch({ type: "REQUEST_START" });
 
     try {
-      const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+  const prompt = `Recommend 6 books for a ${level} ${genre} reader feeling ${mood}. Explain why each book fits.`;
 
-      if (!GEMINI_API_KEY) {
-        throw new Error("Missing API key. Set VITE_GEMINI_API_KEY (or REACT_APP_GEMINI_API_KEY).");
-      }
-      
-      const MODEL = "gemini-2.5-flash";
+  const res = await fetch("/api/recommend", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ genre, mood, level, prompt }),
+  });
 
-      const prompt = `Recommend 6 books for a ${level} ${genre} reader feeling ${mood}. Explain why each book fits.`;
+  const data = await res.json();
 
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-          }),
-        }
-      );
+  if (!res.ok) {
+    throw new Error(data?.error || data?.message || "Request failed");
+  }
+
+  setAiResponses((prev) => [...prev, data.text]);
+} catch (err) {
+  console.log(err);
+}
 
       const data = await res.json();
 
